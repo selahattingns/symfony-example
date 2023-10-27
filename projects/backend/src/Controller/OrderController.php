@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Helpers\JsonHelper;
 use App\Helpers\RedirectHelper;
 use App\Helpers\ValidatorHelper;
 use App\Requests\OrderCalculateDiscountRequest;
