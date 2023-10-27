@@ -33,7 +33,7 @@ This will list the services and their status
 ---
 
 We need to connect to the terminal of the service with the "Container ID"
-of the "php8" service among those listed with "docker ps"
+of the "php73" service among those listed with "docker ps"
 
 For example, let's assume the
 Container ID is "39979863cb2b." To connect to the terminal
@@ -50,11 +50,13 @@ of this service, you should run the command "docker exec -it 39979863cb2b bash"
 ---
 
 After connecting, you can run
-the command "cd backend && php artisan migrate" to execute
+the command "cd backend && php bin/console doctrine:database:create" to execute
 the migrations for the database.
 
 
-    -
+    php bin/console doctrine:database:create
+    php bin/console make:migration
+    php bin/console doctrine:migrations:migrate
 
 ---
 
