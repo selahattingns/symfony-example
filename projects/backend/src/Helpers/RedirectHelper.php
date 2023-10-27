@@ -9,7 +9,7 @@ class RedirectHelper {
      * @param $violations
      * @return JsonResponse
      */
-    public static function validatorMessagesWithResponse($violations)
+    public static function validatorMessagesForResponse($violations)
     {
         foreach ($violations as $violation){
             $errors[] = [

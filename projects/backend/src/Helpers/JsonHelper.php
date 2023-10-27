@@ -11,6 +11,15 @@ class JsonHelper {
      */
     public static function requestDecode(Request $request)
     {
-        return json_decode($request->getContent(), true);
+        return self::decode($request->getContent());
+    }
+
+    /**
+     * @param $data
+     * @return mixed
+     */
+    public static function decode($data)
+    {
+        return json_decode($data, true);
     }
 }
