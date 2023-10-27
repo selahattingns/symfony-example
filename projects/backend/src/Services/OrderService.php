@@ -1,7 +1,23 @@
 <?php
 namespace App\Services;
 
+use App\Repository\OrderRepository;
+
 class OrderService {
+
+    /**
+     * @var OrderRepository
+     */
+    private $orderRepository;
+
+    /**
+     * @param OrderRepository $orderRepository
+     */
+    public function __construct(OrderRepository $orderRepository)
+    {
+        $this->orderRepository = $orderRepository;
+    }
+
     public function firstOrCreate($customerId, $total)
     {
 
