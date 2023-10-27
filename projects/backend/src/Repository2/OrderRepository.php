@@ -1,22 +1,9 @@
 <?php
-namespace App\Services;
+namespace App\Repository2;
 
-use App\Repository2\OrderRepository;
+use App\Interfaces\OrderInterface;
 
-class OrderService {
-
-    /**
-     * @var OrderRepository
-     */
-    private $orderRepository;
-
-    /**
-     * @param OrderRepository $orderRepository
-     */
-    public function __construct(OrderRepository $orderRepository)
-    {
-        $this->orderRepository = $orderRepository;
-    }
+class OrderRepository implements OrderInterface {
 
     public function firstOrCreate($customerId, $total)
     {

@@ -1,5 +1,5 @@
 <?php
-namespace App\Repository;
+namespace App\Repository2;
 
 use App\Interfaces\OrderItemInterface;
 

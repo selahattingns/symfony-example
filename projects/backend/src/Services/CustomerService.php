@@ -1,7 +1,7 @@
 <?php
 namespace App\Services;
 
-use App\Repository\CustomerRepository;
+use App\Repository2\CustomerRepository;
 
 class CustomerService {
 

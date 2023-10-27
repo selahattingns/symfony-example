@@ -1,7 +1,7 @@
 <?php
 namespace App\Services;
 
-use App\Repository\OrderItemRepository;
+use App\Repository2\OrderItemRepository;
 
 class OrderItemService {
 

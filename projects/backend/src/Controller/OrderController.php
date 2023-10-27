@@ -52,6 +52,8 @@ class OrderController extends AbstractController
      */
     public function calculateDiscount(Request $request, ValidatorInterface $validator): Response
     {
+
+        dd(123);
         $errors = ValidatorHelper::getErrors($validator, $request, OrderCalculateDiscountRequest::getCollections());
         if ($errors->count()) return RedirectHelper::validatorMessagesForResponse($errors);
 
