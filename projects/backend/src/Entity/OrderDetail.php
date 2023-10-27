@@ -24,7 +24,7 @@ class OrderDetail
 
     /**
      * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="details")
-     * @ORM\JoinColumn(name="order_id", referencedColumnName="id", onDelete="RESTRICT", onUpdate="RESTRICT")
+     * @ORM\JoinColumn(name="order_id", referencedColumnName="id")
      */
     private $order;
 

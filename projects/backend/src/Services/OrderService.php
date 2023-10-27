@@ -6,16 +6,16 @@ use App\Repository2\OrderRepository;
 class OrderService {
 
     /**
-     * @var OrderRepository
+     * @var
      */
-    private $orderRepository;
+    private $repository;
 
     /**
-     * @param OrderRepository $orderRepository
+     *
      */
-    public function __construct(OrderRepository $orderRepository)
+    public function __construct(/*Repository $repository*/)
     {
-        $this->orderRepository = $orderRepository;
+        //$this->repository = $repository;
     }
 
     public function firstOrCreate($customerId, $total)

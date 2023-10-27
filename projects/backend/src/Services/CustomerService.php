@@ -6,16 +6,16 @@ use App\Repository2\CustomerRepository;
 class CustomerService {
 
     /**
-     * @var CustomerRepository
+     * @var
      */
-    private $customerRepository;
+    private $repository;
 
     /**
-     * @param CustomerRepository $customerRepository
+     *
      */
-    public function __construct(CustomerRepository $customerRepository)
+    public function __construct(/*Repository $repository*/)
     {
-        $this->customerRepository = $customerRepository;
+        //$this->repository = $repository;
     }
 
     public function firstOrCreate($name, $since, $revenue){

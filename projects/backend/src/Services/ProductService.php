@@ -6,16 +6,16 @@ use App\Repository2\ProductRepository;
 class ProductService {
 
     /**
-     * @var ProductRepository
+     * @var
      */
-    private $productRepository;
+    private $repository;
 
     /**
-     * @param ProductRepository $productRepository
+     *
      */
-    public function __construct(ProductRepository $productRepository)
+    public function __construct(/*Repository $repository*/)
     {
-        $this->productRepository = $productRepository;
+        //$this->repository = $repository;
     }
 
     public function firstOrCreate($name, $category, $price, $stock)

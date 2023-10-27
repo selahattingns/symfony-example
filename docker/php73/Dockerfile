@@ -1,20 +1,25 @@
-FROM php:7.3-fpm
-RUN apt-get update
-RUN apt-get upgrade -y
-RUN apt-get install libzip-dev -y
-RUN apt-get install zip unzip -y
-RUN apt-get install -y git
-RUN apt-get install -y curl
-RUN apt-get install -y libpq-dev
+FROM php:7.3.33-fpm-alpine3.14
 
-RUN docker-php-ext-install zip
-RUN docker-php-ext-install mysqli
-RUN docker-php-ext-install bcmath
-RUN docker-php-ext-install ctype
-RUN docker-php-ext-install fileinfo
-RUN docker-php-ext-install pdo
-RUN docker-php-ext-install pdo_mysql
+COPY --from=composer:2.2 /usr/bin/composer /usr/bin/composer
+# VEYA ayrı bir RUN olarak çalışması gerekmektedir.
+RUN curl -s https://getcomposer.org/installer | php
 
-RUN apt-get install -y nano
-
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN apk update \
+    && apk add --no-cache \
+    bash \
+    libzip-dev \
+    zip \
+    unzip \
+    icu-dev \
+    postgresql-libs \
+    postgresql-dev \
+    && docker-php-ext-configure \
+    intl \
+    && docker-php-ext-install \
+    intl \
+    opcache \
+    mysqli \
+    pdo \
+    pdo_mysql \
+    && docker-php-ext-enable \
+    pdo_mysql
