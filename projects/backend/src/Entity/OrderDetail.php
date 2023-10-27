@@ -20,7 +20,7 @@ class OrderDetail
     /**
      * @ORM\Column(type="integer")
      */
-    private $count;
+    private $count2;
 
     /**
      * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="details")
@@ -33,14 +33,14 @@ class OrderDetail
         return $this->id;
     }
 
-    public function getCount(): ?int
+    public function getCount2(): ?int
     {
-        return $this->count;
+        return $this->count2;
     }
 
-    public function setCount(int $count): self
+    public function setCount(int $count2): self
     {
-        $this->count = $count;
+        $this->count2 = $count2;
 
         return $this;
     }
