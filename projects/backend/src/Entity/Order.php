@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=OrderRepository::class)
- * @ORM\Table(name="`order`")
+ * @ORM\Table(name="`orders`")
  */
 class Order
 {
@@ -19,46 +19,75 @@ class Order
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="float")
      */
-    private $name;
+    private $total;
 
     /**
-     * @ORM\OneToMany(targetEntity=OrderDetail::class, mappedBy="order", orphanRemoval=true, cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Customer", inversedBy="orders")
+     * @ORM\JoinColumn(name="customer_id", referencedColumnName="id")
      */
-    private $details;
+    private $customer;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\OneToMany(targetEntity=OrderItem::class, mappedBy="order", orphanRemoval=true, cascade={"persist"})
      */
-    private $isActive;
+    private $items;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    protected $created;
+
+    /**
+     * @ORM\Column(type="datetime", nullable = true)
+     */
+    protected $updated;
+
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    /**
+     * @return float|null
+     */
+    public function getTotal(): ?float
     {
-        return $this->name;
+        return $this->total;
     }
 
-    public function setName(string $name): self
+    /**
+     * @param float $total
+     * @return $this
+     */
+    public function setTotal(float $total): self
     {
-        $this->name = $name;
+        $this->total = $total;
 
         return $this;
     }
 
-    public function isisActive(): ?bool
+    /**
+     * Gets triggered only on insert
+
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
     {
-        return $this->isActive;
+        $this->created = new \DateTime("now");
     }
 
-    public function setisActive(bool $isActive): self
-    {
-        $this->isActive = $isActive;
+    /**
+     * Gets triggered every time on update
 
-        return $this;
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
+    {
+        $this->updated = new \DateTime("now");
     }
 }
