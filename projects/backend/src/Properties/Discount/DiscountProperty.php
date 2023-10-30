@@ -1,7 +1,16 @@
 <?php
 namespace App\Properties\Discount;
 
+use App\Properties\Discount\Rules\AaaRule;
+use App\Properties\Discount\Rules\BbbRule;
+use App\Properties\Discount\Rules\CccRule;
+
 class DiscountProperty {
+    private $namespacesForRuleType = [
+        AaaRule::class,
+        BbbRule::class,
+        CccRule::class
+    ];
 
     /**
      * @param $order
@@ -10,9 +19,8 @@ class DiscountProperty {
      */
     public function detectDiscount($order)
     {
-        $ruleTypeNamespaces = config('rule-types')["namespaces"];
-        foreach ($ruleTypeNamespaces as $ruleTypeNamespace){
-            (new $ruleTypeNamespace())->detectDiscountAndBindRule($order);
+        foreach ($this->namespacesForRuleType as $namespaceForRuleType){
+            (new $namespaceForRuleType())->detectDiscountAndBindRule($order);
         }
     }
 
@@ -23,9 +31,8 @@ class DiscountProperty {
     public function getDiscounts($order)
     {
         $discounts = [];
-        $ruleTypeNamespaces = []; //config('rule-types')["namespaces"];
-        foreach ($ruleTypeNamespaces as $ruleTypeNamespace){
-            $ruleClass = new $ruleTypeNamespace();
+        foreach ($this->namespacesForRuleType as $namespaceForRuleType){
+            $ruleClass = new $namespaceForRuleType();
             $discountsForRuleType = $ruleClass->getDiscounts($order);
             if ($discountsForRuleType){
                 $discounts[] = [
@@ -40,9 +47,8 @@ class DiscountProperty {
      */
     public function ruleTypeSeeder()
     {
-        $ruleTypeNamespaces = []; //config('rule-types')["namespaces"];
-        foreach ($ruleTypeNamespaces as $ruleTypeNamespace){
-            (new $ruleTypeNamespace())->firstOrCreateForTypeTable()->createRules();
+        foreach ($this->namespacesForRuleType as $namespaceForRuleType){
+            (new $namespaceForRuleType())->firstOrCreateForTypeTable()->createRules();
         }
     }
 }
