@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Helpers\JsonHelper;
 use App\Helpers\RedirectHelper;
 use App\Helpers\ValidatorHelper;
 use App\Requests\OrderCalculateDiscountRequest;
@@ -40,7 +41,7 @@ class OrderController extends AbstractController
         $errors = ValidatorHelper::getErrors($validator, $request, OrderStoreRequest::getCollections());
         if ($errors->count()) return RedirectHelper::validatorMessagesForResponse($errors);
 
-        return $this->json($this->orderService->newOrder($request->request->get('customer_id'), $request->request->get('items')));
+        return $this->json($this->orderService->newOrder(JsonHelper::getValueForRequest($request, "customer_id"), JsonHelper::getValueForRequest($request, "items")));
     }
 
     /**
@@ -52,11 +53,9 @@ class OrderController extends AbstractController
      */
     public function calculateDiscount(Request $request, ValidatorInterface $validator): Response
     {
-
-        dd(123);
         $errors = ValidatorHelper::getErrors($validator, $request, OrderCalculateDiscountRequest::getCollections());
         if ($errors->count()) return RedirectHelper::validatorMessagesForResponse($errors);
 
-        return $this->json($this->orderService->find($request->request->get('order_id')) ?? []);
+        return $this->json($this->orderService->find(JsonHelper::getValueForRequest($request, "order_id")) ?? []);
     }
 }
