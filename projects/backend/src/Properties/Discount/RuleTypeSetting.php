@@ -1,11 +1,13 @@
 <?php
 namespace App\Properties\Discount;
 
-//use App\Models\OrderDiscount;
-//use App\Models\Rule;
-//use App\Models\RuleType;
+use App\Entity\OrderDiscount;
+use App\Entity\Rule;
+use App\Entity\RuleType;
+use Doctrine\ORM\EntityManagerInterface;
 
 class RuleTypeSetting {
+
     /**
      * @var string
      */
@@ -21,15 +23,16 @@ class RuleTypeSetting {
     protected $valuesForRuleTable = [];
 
     /**
+     * @param EntityManagerInterface $manager
      * @return $this
      */
-    public function firstOrCreateForTypeTable()
+    public function firstOrCreateForTypeTable(EntityManagerInterface $manager)
     {
-        /**RuleType::firstOrCreate([
-            "type" => $this->type
-        ],[
-            "description" => $this->description,
-        ]);**/
+        $ruleType = new RuleType();
+        $ruleType->setType($this->type);
+        $ruleType->setDescription($this->description);
+        $manager->persist($ruleType);
+        $manager->flush();
         return $this;
     }
 
@@ -57,24 +60,27 @@ class RuleTypeSetting {
      */
     public function ruleDefinition($orderId, $ruleId)
     {
-        /**OrderDiscount::firstOrCreate([
-            "order_id" => $orderId,
-            "rule_id" => $ruleId
-        ]);**/
+        $orderDiscount = new OrderDiscount();
+        $orderDiscount->setWasItUsed(false);
+        //$orderDiscount->setOrder();
+        //$orderDiscount->setRule();
+        //todo manager
     }
 
     /**
+     * @param EntityManagerInterface $manager
      * @return void
      */
-    public function createRules()
+    public function createRules(EntityManagerInterface $manager)
     {
         $ruleType = $this->getRuleType();
         if ($ruleType){
             foreach ($this->valuesForRuleTable as $value){
-                /**Rule::firstOrCreate([
-                    "rule_type_id" => $ruleType->id,
-                    "rule_values" => $value
-                ]);**/
+                $rule = new Rule();
+                $rule->setRuleValues($value);
+                $rule->setRuleType($ruleType);
+                $manager->persist($rule);
+                $manager->flush();
             }
         }
     }

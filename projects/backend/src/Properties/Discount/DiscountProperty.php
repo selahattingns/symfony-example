@@ -43,12 +43,13 @@ class DiscountProperty {
     }
 
     /**
+     * @param $manager
      * @return void
      */
-    public function ruleTypeSeeder()
+    public function ruleTypeSeeder($manager)
     {
         foreach ($this->namespacesForRuleType as $namespaceForRuleType){
-            (new $namespaceForRuleType())->firstOrCreateForTypeTable()->createRules();
+            (new $namespaceForRuleType())->firstOrCreateForTypeTable($manager)->createRules($manager);
         }
     }
 }

@@ -45,4 +45,15 @@ class Rule
 
         return $this;
     }
+
+    public function getRuleType(): ?RuleType
+    {
+        return $this->ruleType;
+    }
+
+    public function setRuleType(?RuleType $ruleType): self
+    {
+        $this->ruleType = $ruleType;
+        return $this;
+    }
 }
