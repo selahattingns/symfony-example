@@ -6,6 +6,16 @@ use Symfony\Component\HttpFoundation\Request;
 class JsonHelper {
 
     /**
+     * @param $request
+     * @param $key
+     * @return mixed|null
+     */
+    public static function getValueForRequest($request, $key)
+    {
+        return self::requestDecode($request)[$key] ?? null;
+    }
+
+    /**
      * @param Request $request
      * @return mixed
      */
