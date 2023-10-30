@@ -5,6 +5,10 @@ use Psr\Container\ContainerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
 class ContainerService implements ServiceSubscriberInterface{
+
+    /**
+     * @var ContainerInterface
+     */
     protected $container;
 
     /**
@@ -14,6 +18,9 @@ class ContainerService implements ServiceSubscriberInterface{
         $this->container = $container;
     }
 
+    /**
+     * @return array|string[]
+     */
     public static function getSubscribedServices(): array
     {
         return [];

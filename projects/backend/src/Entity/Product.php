@@ -43,16 +43,26 @@ class Product
      */
     private $items;
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return string|null
+     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    /**
+     * @param string $name
+     * @return $this
+     */
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -60,11 +70,18 @@ class Product
         return $this;
     }
 
+    /**
+     * @return int|null
+     */
     public function getCategory(): ?int
     {
         return $this->category;
     }
 
+    /**
+     * @param int|null $category
+     * @return $this
+     */
     public function setCategory(?int $category): self
     {
         $this->category = $category;
@@ -72,11 +89,18 @@ class Product
         return $this;
     }
 
+    /**
+     * @return float|null
+     */
     public function getPrice(): ?float
     {
         return $this->price;
     }
 
+    /**
+     * @param float $price
+     * @return $this
+     */
     public function setPrice(float $price): self
     {
         $this->price = $price;
@@ -84,11 +108,18 @@ class Product
         return $this;
     }
 
+    /**
+     * @return int|null
+     */
     public function getStock(): ?int
     {
         return $this->stock;
     }
 
+    /**
+     * @param int $stock
+     * @return $this
+     */
     public function setStock(int $stock): self
     {
         $this->stock = $stock;

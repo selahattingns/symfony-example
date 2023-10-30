@@ -35,16 +35,26 @@ class OrderDiscount
      */
     private $order;
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return bool|null
+     */
     public function isWasItUsed(): ?bool
     {
         return $this->was_it_used;
     }
 
+    /**
+     * @param bool $was_it_used
+     * @return $this
+     */
     public function setWasItUsed(bool $was_it_used): self
     {
         $this->was_it_used = $was_it_used;

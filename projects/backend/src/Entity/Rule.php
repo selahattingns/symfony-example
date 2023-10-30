@@ -29,20 +29,48 @@ class Rule
      */
     private $ruleType;
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return string|null
+     */
     public function getRuleValues(): ?string
     {
         return $this->rule_values;
     }
 
+    /**
+     * @param string|null $rule_values
+     * @return $this
+     */
     public function setRuleValues(?string $rule_values): self
     {
         $this->rule_values = $rule_values;
 
+        return $this;
+    }
+
+    /**
+     * @return RuleType|null
+     */
+    public function getRuleType(): ?RuleType
+    {
+        return $this->ruleType;
+    }
+
+    /**
+     * @param RuleType|null $ruleType
+     * @return $this
+     */
+    public function setRuleType(?RuleType $ruleType): self
+    {
+        $this->ruleType = $ruleType;
         return $this;
     }
 }

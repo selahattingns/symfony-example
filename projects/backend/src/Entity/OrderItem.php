@@ -45,16 +45,26 @@ class OrderItem
      */
     private $product;
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return int|null
+     */
     public function getQuantity(): ?int
     {
         return $this->quantity;
     }
 
+    /**
+     * @param int $quantity
+     * @return $this
+     */
     public function setQuantity(int $quantity): self
     {
         $this->quantity = $quantity;
@@ -62,11 +72,18 @@ class OrderItem
         return $this;
     }
 
+    /**
+     * @return float|null
+     */
     public function getUnitPrice(): ?float
     {
         return $this->unit_price;
     }
 
+    /**
+     * @param float $unit_price
+     * @return $this
+     */
     public function setUnitPrice(float $unit_price): self
     {
         $this->unit_price = $unit_price;
@@ -74,11 +91,18 @@ class OrderItem
         return $this;
     }
 
+    /**
+     * @return float|null
+     */
     public function getTotal(): ?float
     {
         return $this->total;
     }
 
+    /**
+     * @param float $total
+     * @return $this
+     */
     public function setTotal(float $total): self
     {
         $this->total = $total;

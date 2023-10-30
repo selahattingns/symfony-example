@@ -17,6 +17,8 @@ class AppFixtures extends Fixture implements DependentFixtureInterface
     {
         return [
             CustomerFixtures::class,
+            ProductFixtures::class,
+            RuleTypeFixtures::class
         ];
     }
 }
