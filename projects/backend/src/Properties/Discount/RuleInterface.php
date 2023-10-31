@@ -2,6 +2,7 @@
 namespace App\Properties\Discount;
 
 use App\Entity\Order;
+use App\Entity\OrderDiscount;
 use App\Entity\Rule;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -18,9 +19,9 @@ interface RuleInterface {
     public function checkForRule(EntityManagerInterface $manager, $order, $rule);
 
     /**
-     * @param $order
-     * @param $rule
-     * @param $discount
+     * @param Order $order
+     * @param Rule $rule
+     * @param OrderDiscount $discount
      * @return string
      */
     public function setMessage($order, $rule, $discount): string;

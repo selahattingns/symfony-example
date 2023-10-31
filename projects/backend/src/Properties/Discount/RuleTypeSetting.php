@@ -1,9 +1,11 @@
 <?php
 namespace App\Properties\Discount;
 
+use App\Entity\Order;
 use App\Entity\OrderDiscount;
 use App\Entity\Rule;
 use App\Entity\RuleType;
+use App\Repository\OrderDiscountRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class RuleTypeSetting {
@@ -46,7 +48,6 @@ class RuleTypeSetting {
          * @var RuleType $ruleType
          */
         $ruleType = $this->getRuleType($manager);
-
         return $ruleType ? $manager->getRepository(Rule::class)->findBy(['ruleType' => $ruleType->getId()]) : [];
     }
 
@@ -108,17 +109,23 @@ class RuleTypeSetting {
 
     /**
      * @param EntityManagerInterface $manager
-     * @param $order
+     * @param Order $order
      * @return array|null
      */
-    public function getDiscounts(EntityManagerInterface $manager, $order)
+    public function getDiscounts(EntityManagerInterface $manager, Order $order)
     {
         foreach ($this->getRules($manager) as $rule){
-            $discounts = $order->discounts()->where('rule_id', $rule->id)->get();
-            foreach ($discounts as $discount){
+            /**
+             * @var OrderDiscountRepository $orderDiscountRepository
+             * @var Rule $rule
+             */
+            $orderDiscountRepository = $manager->getRepository(OrderDiscount::class);
+            $orderDiscounts = $orderDiscountRepository->findBy(["order" => $order->getId(), "rule" => $rule->getId()]);
+
+            foreach ($orderDiscounts as $discount){
                 $data[] = [
                     "message" => $this->setMessage($order, $rule, $discount),
-                    "rule_id" => $rule->id
+                    "rule_id" => $rule->getId()
                 ];
             }
         }return $data ?? null;

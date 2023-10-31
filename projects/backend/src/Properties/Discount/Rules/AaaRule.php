@@ -2,6 +2,7 @@
 namespace App\Properties\Discount\Rules;
 
 use App\Entity\Order;
+use App\Entity\OrderDiscount;
 use App\Entity\Rule;
 use App\Properties\Discount\RuleInterface;
 use App\Properties\Discount\RuleTypeSetting;
@@ -41,13 +42,13 @@ class AaaRule extends RuleTypeSetting implements RuleInterface {
     }
 
     /**
-     * @param $order
-     * @param $rule
-     * @param $discount
+     * @param Order $order
+     * @param Rule $rule
+     * @param OrderDiscount $discount
      * @return string
      */
     public function setMessage($order, $rule, $discount): string
     {
-        return $order->id . " id'li sipariş'de toplam " . ($rule->json_rule_values[0] ?? "") . "TL ve üzeri alışveriş için %" . ($rule->json_rule_values[1] ?? "") . " indirim";
+        return $order->getId() . " id'li sipariş'de toplam " . ($rule->getJsonRuleValues()[0] ?? "") . "TL ve üzeri alışveriş için %" . ($rule->getJsonRuleValues()[1] ?? "") . " indirim";
     }
 }

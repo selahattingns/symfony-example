@@ -6,6 +6,7 @@ use App\Entity\Order;
 use App\Helpers\JsonHelper;
 use App\Helpers\RedirectHelper;
 use App\Helpers\ValidatorHelper;
+use App\Properties\Discount\DiscountProperty;
 use App\Repository\OrderRepository;
 use App\Requests\OrderCalculateDiscountRequest;
 use App\Requests\OrderStoreRequest;
@@ -36,7 +37,9 @@ class OrderController extends AbstractController
     /**
      * @param Request $request
      * @param ValidatorInterface $validator
+     * @param EntityManagerInterface $manager
      * @return Response
+     * @throws \App\Exceptions\QuantityException
      *
      * @Route("/api/orders", name="orderStore", methods={"POST"})
      */
@@ -53,15 +56,17 @@ class OrderController extends AbstractController
     /**
      * @param Request $request
      * @param ValidatorInterface $validator
+     * @param EntityManagerInterface $manager
      * @return Response
      *
      * @Route("/api/calculate-discount", name="calculateDiscount", methods={"GET"})
      */
-    public function calculateDiscount(Request $request, ValidatorInterface $validator): Response
+    public function calculateDiscount(Request $request, ValidatorInterface $validator, EntityManagerInterface $manager): Response
     {
         $errors = ValidatorHelper::getErrors($validator, $request, OrderCalculateDiscountRequest::getCollections());
         if ($errors->count()) return RedirectHelper::validatorMessagesForResponse($errors);
 
-        return $this->json($this->orderService->find(JsonHelper::getValueForRequest($request, "order_id")) ?? []);
+        $order = $this->orderService->find(JsonHelper::getValueForRequest($request, "order_id")) ?? [];
+        return new JsonResponse($order ? (new DiscountProperty())->getDiscounts($manager, $order) : [], 200);
     }
 }

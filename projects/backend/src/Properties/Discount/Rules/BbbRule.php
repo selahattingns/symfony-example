@@ -2,6 +2,7 @@
 namespace App\Properties\Discount\Rules;
 
 use App\Entity\Order;
+use App\Entity\OrderDiscount;
 use App\Entity\Rule;
 use App\Properties\Discount\RuleInterface;
 use App\Properties\Discount\RuleTypeSetting;
@@ -51,13 +52,13 @@ class BbbRule extends RuleTypeSetting implements RuleInterface {
     }
 
     /**
-     * @param $order
-     * @param $rule
-     * @param $discount
+     * @param Order $order
+     * @param Rule $rule
+     * @param OrderDiscount $discount
      * @return string
      */
     public function setMessage($order, $rule, $discount): string
     {
-        return $order->id . " id'li sipariş'de " . ($rule->json_rule_values[1] ?? "") . " adet ürün satın alındığı için " . ($rule->json_rule_values[2] ?? "") . " tanesi ücretsiz";
+        return $order->getId() . " id'li sipariş'de " . ($rule->getJsonRuleValues()[1] ?? "") . " adet ürün satın alındığı için " . ($rule->getJsonRuleValues()[2] ?? "") . " tanesi ücretsiz";
     }
 }

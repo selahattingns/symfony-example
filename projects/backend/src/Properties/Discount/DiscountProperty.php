@@ -4,6 +4,7 @@ namespace App\Properties\Discount;
 use App\Properties\Discount\Rules\AaaRule;
 use App\Properties\Discount\Rules\BbbRule;
 use App\Properties\Discount\Rules\CccRule;
+use Doctrine\ORM\EntityManagerInterface;
 
 class DiscountProperty {
     private $namespacesForRuleType = [
@@ -25,15 +26,16 @@ class DiscountProperty {
     }
 
     /**
+     * @param EntityManagerInterface $manager
      * @param $order
      * @return array
      */
-    public function getDiscounts($order)
+    public function getDiscounts(EntityManagerInterface $manager, $order)
     {
         $discounts = [];
         foreach ($this->namespacesForRuleType as $namespaceForRuleType){
             $ruleClass = new $namespaceForRuleType();
-            $discountsForRuleType = $ruleClass->getDiscounts($order);
+            $discountsForRuleType = $ruleClass->getDiscounts($manager, $order);
             if ($discountsForRuleType){
                 $discounts[] = [
                     $ruleClass->type => $discountsForRuleType
