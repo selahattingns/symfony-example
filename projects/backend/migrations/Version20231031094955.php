@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20231030072947 extends AbstractMigration
+final class Version20231031094955 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -33,7 +33,7 @@ final class Version20231030072947 extends AbstractMigration
         $this->addSql('ALTER TABLE `order_items` ADD CONSTRAINT FK_62809DB08D9F6D38 FOREIGN KEY (order_id) REFERENCES `orders` (id)');
         $this->addSql('ALTER TABLE `order_items` ADD CONSTRAINT FK_62809DB04584665A FOREIGN KEY (product_id) REFERENCES `products` (id)');
         $this->addSql('ALTER TABLE `orders` ADD CONSTRAINT FK_E52FFDEE9395C3F3 FOREIGN KEY (customer_id) REFERENCES `customers` (id)');
-        $this->addSql('ALTER TABLE `rules` ADD CONSTRAINT FK_899A993C35D8B527 FOREIGN KEY (rule_type_id) REFERENCES `orders` (id)');
+        $this->addSql('ALTER TABLE `rules` ADD CONSTRAINT FK_899A993C35D8B527 FOREIGN KEY (rule_type_id) REFERENCES `rule_types` (id)');
     }
 
     public function down(Schema $schema): void
@@ -42,8 +42,8 @@ final class Version20231030072947 extends AbstractMigration
         $this->addSql('ALTER TABLE `orders` DROP FOREIGN KEY FK_E52FFDEE9395C3F3');
         $this->addSql('ALTER TABLE `order_discounts` DROP FOREIGN KEY FK_40D079408D9F6D38');
         $this->addSql('ALTER TABLE `order_items` DROP FOREIGN KEY FK_62809DB08D9F6D38');
-        $this->addSql('ALTER TABLE `rules` DROP FOREIGN KEY FK_899A993C35D8B527');
         $this->addSql('ALTER TABLE `order_items` DROP FOREIGN KEY FK_62809DB04584665A');
+        $this->addSql('ALTER TABLE `rules` DROP FOREIGN KEY FK_899A993C35D8B527');
         $this->addSql('ALTER TABLE `order_discounts` DROP FOREIGN KEY FK_40D07940744E0351');
         $this->addSql('DROP TABLE `customers`');
         $this->addSql('DROP TABLE `order_discounts`');

@@ -1,6 +1,8 @@
 <?php
 namespace App\Properties\Discount\Rules;
 
+use App\Entity\Order;
+use App\Entity\Rule;
 use App\Properties\Discount\RuleInterface;
 use App\Properties\Discount\RuleTypeSetting;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,19 +27,19 @@ class BbbRule extends RuleTypeSetting implements RuleInterface {
 
     /**
      * @param EntityManagerInterface $manager
-     * @param $order
-     * @param $rule
+     * @param Order $order
+     * @param Rule $rule
      * @return void
      */
     public function checkForRule(EntityManagerInterface $manager, $order, $rule): void
     {
-        if (isset($rule->json_rule_values[0], $rule->json_rule_values[1])){
-            foreach ($order->items as $item){
+        if (isset($rule->getJsonRuleValues()[0], $rule->getJsonRuleValues()[1])){
+            foreach (/*$order->items*/ [] as $item){
                 /* x id li kategori */
-                if (optional($item->product)->category === $rule->json_rule_values[0]){
+                if (optional($item->product)->category === $rule->getJsonRuleValues()[0]){
                     /* y adet satın almak */
-                    if($item->quantity === $rule->json_rule_values[1]){
-                        $this->ruleDefinition($manager, $order->id, $rule->id);
+                    if($item->quantity === $rule->getJsonRuleValues()[1]){
+                        $this->ruleDefinition($manager, $order, $rule);
                     }
                 }
             }

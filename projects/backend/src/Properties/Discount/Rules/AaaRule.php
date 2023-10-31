@@ -1,6 +1,8 @@
 <?php
 namespace App\Properties\Discount\Rules;
 
+use App\Entity\Order;
+use App\Entity\Rule;
 use App\Properties\Discount\RuleInterface;
 use App\Properties\Discount\RuleTypeSetting;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,15 +28,15 @@ class AaaRule extends RuleTypeSetting implements RuleInterface {
 
     /**
      * @param EntityManagerInterface $manager
-     * @param $order
-     * @param $rule
+     * @param Order $order
+     * @param Rule $rule
      * @return void
      */
     public function checkForRule(EntityManagerInterface $manager, $order, $rule): void
     {
         /* x adet ve üzeri alışveriş */
-        if (isset($rule->json_rule_values[0]) && $order->total >= $rule->json_rule_values[0]){
-            $this->ruleDefinition($manager, $order->id, $rule->id);
+        if (isset($rule->getJsonRuleValues()[0]) && $order->getTotal() >= $rule->getJsonRuleValues()[0]){
+            $this->ruleDefinition($manager, $order, $rule);
         }
     }
 

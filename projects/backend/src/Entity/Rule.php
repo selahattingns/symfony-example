@@ -24,7 +24,7 @@ class Rule
     private $rule_values;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="rules")
+     * @ORM\ManyToOne(targetEntity="RuleType", inversedBy="rules")
      * @ORM\JoinColumn(name="rule_type_id", referencedColumnName="id")
      */
     private $ruleType;
@@ -43,6 +43,14 @@ class Rule
     public function getRuleValues(): ?string
     {
         return $this->rule_values;
+    }
+
+    /**
+     * @return array
+     */
+    public function getJsonRuleValues(): array
+    {
+        return json_decode($this->rule_values) ?? [];
     }
 
     /**

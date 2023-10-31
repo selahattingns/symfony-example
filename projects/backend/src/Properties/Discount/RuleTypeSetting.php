@@ -42,8 +42,12 @@ class RuleTypeSetting {
      */
     public function getRules(EntityManagerInterface $manager)
     {
+        /**
+         * @var RuleType $ruleType
+         */
         $ruleType = $this->getRuleType($manager);
-        return []; // $ruleType ? Rule::where('rule_type_id',$ruleType->id)->get() : [];
+
+        return $ruleType ? $manager->getRepository(Rule::class)->findBy(['ruleType' => $ruleType->getId()]) : [];
     }
 
     /**
@@ -52,22 +56,23 @@ class RuleTypeSetting {
      */
     public function getRuleType(EntityManagerInterface $manager)
     {
-        return null; //RuleType::where('type', $this->type)->first();
+        return $manager->getRepository(RuleType::class)->findOneBy(['type' => $this->type]);
     }
 
     /**
      * @param EntityManagerInterface $manager
-     * @param $orderId
-     * @param $ruleId
+     * @param $order
+     * @param $rule
      * @return void
      */
-    public function ruleDefinition(EntityManagerInterface $manager, $orderId, $ruleId)
+    public function ruleDefinition(EntityManagerInterface $manager, $order, $rule)
     {
         $orderDiscount = new OrderDiscount();
         $orderDiscount->setWasItUsed(false);
-        //$orderDiscount->setOrder();
-        //$orderDiscount->setRule();
-        //todo manager
+        $orderDiscount->setOrder($order);
+        $orderDiscount->setRule($rule);
+        $manager->persist($orderDiscount);
+        $manager->flush();
     }
 
     /**

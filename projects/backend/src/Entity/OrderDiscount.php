@@ -61,4 +61,20 @@ class OrderDiscount
 
         return $this;
     }
+
+    /**
+     * @param mixed $order
+     */
+    public function setOrder($order): void
+    {
+        $this->order = $order;
+    }
+
+    /**
+     * @param mixed $rule
+     */
+    public function setRule($rule): void
+    {
+        $this->rule = $rule;
+    }
 }
