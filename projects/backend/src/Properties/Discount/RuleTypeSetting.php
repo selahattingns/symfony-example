@@ -37,28 +37,31 @@ class RuleTypeSetting {
     }
 
     /**
+     * @param EntityManagerInterface $manager
      * @return array
      */
-    public function getRules()
+    public function getRules(EntityManagerInterface $manager)
     {
-        $ruleType = $this->getRuleType();
+        $ruleType = $this->getRuleType($manager);
         return []; // $ruleType ? Rule::where('rule_type_id',$ruleType->id)->get() : [];
     }
 
     /**
-     * @return mixed
+     * @param EntityManagerInterface $manager
+     * @return null
      */
-    public function getRuleType()
+    public function getRuleType(EntityManagerInterface $manager)
     {
         return null; //RuleType::where('type', $this->type)->first();
     }
 
     /**
+     * @param EntityManagerInterface $manager
      * @param $orderId
      * @param $ruleId
      * @return void
      */
-    public function ruleDefinition($orderId, $ruleId)
+    public function ruleDefinition(EntityManagerInterface $manager, $orderId, $ruleId)
     {
         $orderDiscount = new OrderDiscount();
         $orderDiscount->setWasItUsed(false);
@@ -73,7 +76,7 @@ class RuleTypeSetting {
      */
     public function createRules(EntityManagerInterface $manager)
     {
-        $ruleType = $this->getRuleType();
+        $ruleType = $this->getRuleType($manager);
         if ($ruleType){
             foreach ($this->valuesForRuleTable as $value){
                 $rule = new Rule();
@@ -86,24 +89,26 @@ class RuleTypeSetting {
     }
 
     /**
+     * @param EntityManagerInterface $manager
      * @param $order
      * @return void
      */
-    public function detectDiscountAndBindRule($order)
+    public function detectDiscountAndBindRule(EntityManagerInterface $manager, $order)
     {
-        $rules = $this->getRules();
+        $rules = $this->getRules($manager);
         foreach ($rules as $rule){
-            $this->checkForRule($order, $rule);
+            $this->checkForRule($manager, $order, $rule);
         }
     }
 
     /**
+     * @param EntityManagerInterface $manager
      * @param $order
      * @return array|null
      */
-    public function getDiscounts($order)
+    public function getDiscounts(EntityManagerInterface $manager, $order)
     {
-        foreach ($this->getRules() as $rule){
+        foreach ($this->getRules($manager) as $rule){
             $discounts = $order->discounts()->where('rule_id', $rule->id)->get();
             foreach ($discounts as $discount){
                 $data[] = [

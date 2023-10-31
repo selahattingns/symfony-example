@@ -13,14 +13,14 @@ class DiscountProperty {
     ];
 
     /**
+     * @param $manager
      * @param $order
      * @return void
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    public function detectDiscount($order)
+    public function detectDiscount($manager, $order)
     {
         foreach ($this->namespacesForRuleType as $namespaceForRuleType){
-            (new $namespaceForRuleType())->detectDiscountAndBindRule($order);
+            (new $namespaceForRuleType())->detectDiscountAndBindRule($manager, $order);
         }
     }
 

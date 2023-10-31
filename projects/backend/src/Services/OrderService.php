@@ -4,6 +4,7 @@ namespace App\Services;
 use App\Entity\Customer;
 use App\Entity\Order;
 use App\Exceptions\QuantityException;
+use App\Properties\Discount\DiscountProperty;
 use App\Repository\CustomerRepository;
 use App\Repository\OrderRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,6 +17,9 @@ class OrderService extends ContainerService {
      */
     private $manager;
 
+    /**
+     * @var OrderRepository
+     */
     private $repository;
 
     /**
@@ -80,13 +84,12 @@ class OrderService extends ContainerService {
 
     }
 
-
     /**
-     * todo
-     *
+     * @param EntityManagerInterface $manager
      * @param $customerId
      * @param $items
-     * @return null
+     * @return Order|string|null
+     * @throws QuantityException
      */
     public function newOrder(EntityManagerInterface $manager, $customerId, $items)
     {
@@ -125,6 +128,8 @@ class OrderService extends ContainerService {
             $order->setTotal($total);
             $manager->persist($order);
             $manager->flush();
+
+            (new DiscountProperty())->detectDiscount($manager, $order);
 
             return $this->findWithItems($order->getId());
         }

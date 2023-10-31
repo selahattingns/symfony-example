@@ -3,8 +3,23 @@ namespace App\Services;
 
 use App\Entity\OrderItem;
 use App\Repository\OrderItemRepository;
+use Psr\Container\ContainerInterface;
 
 class OrderItemService extends ContainerService {
+
+    /**
+     * @var OrderItemRepository
+     */
+    private $repository;
+
+    /**
+     * @param ContainerInterface $container
+     */
+    public function __construct(ContainerInterface $container)
+    {
+        parent::__construct($container);
+        $this->repository = $this->container->get(OrderItemRepository::class);
+    }
 
     public static function getSubscribedServices(): array
     {
@@ -29,11 +44,7 @@ class OrderItemService extends ContainerService {
         $orderItem->setUnitPrice($unitPrice);
         $orderItem->setOrder($order);
         $orderItem->setProduct($product);
-
-        /**
-         * @var OrderItemRepository $orderItemRepository
-         */
-        $orderItemRepository = $this->container->get(OrderItemRepository::class);
-        $orderItemRepository->add($orderItem, $flush);
+;
+        $this->repository->add($orderItem, $flush);
     }
 }
