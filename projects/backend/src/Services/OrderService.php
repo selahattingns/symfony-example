@@ -119,8 +119,8 @@ class OrderService extends ContainerService {
                 }
                 if ($product){
                     $total += $product->getPrice() * $item["quantity"];
-                    //$product->setStock($product->getStock() - $item["quantity"]);
-                    //$manager->persist($product);
+                    $product->setStock($product->getStock() - $item["quantity"]);
+                    $manager->persist($product);
 
                     $orderItemService->create($order, $product, $item["quantity"], $product->getPrice(), $product->getPrice() * $item["quantity"], false);
                 }
