@@ -1,7 +1,10 @@
 <?php
 namespace App\Services;
 
+use App\Entity\Customer;
+use App\Entity\Order;
 use App\Repository\CustomerRepository;
+use App\Repository\OrderRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Container\ContainerInterface;
 
@@ -12,6 +15,8 @@ class OrderService extends ContainerService {
      */
     private $manager;
 
+    private $repository;
+
     /**
      * @param ContainerInterface $container
      * @param EntityManagerInterface $manager
@@ -20,12 +25,16 @@ class OrderService extends ContainerService {
     {
         $this->manager = $manager;
         parent::__construct($container);
+        $this->repository = $this->container->get(OrderRepository::class);
     }
 
     public static function getSubscribedServices(): array
     {
         return [
-            CustomerRepository::class => CustomerRepository::class
+            CustomerRepository::class => CustomerRepository::class,
+            OrderRepository::class => OrderRepository::class,
+            ProductService::class => ProductService::class,
+            OrderItemService::class => OrderItemService::class
         ];
     }
 
@@ -34,19 +43,34 @@ class OrderService extends ContainerService {
 
     }
 
-    public function create($customerId, $total)
+    /**
+     * @param $customer
+     * @param $total
+     * @return Order
+     */
+    public function create($customer, $total)
     {
+        $order = new Order();
+        $order->setTotal($total);
+        $order->setCustomer($customer);
 
+        $this->repository->add($order, true);
+
+        return $order;
     }
 
+    /**
+     * @param $id
+     * @return Order|null
+     */
     public function findWithItems($id)
     {
-
+        return $this->repository->find($id);
     }
 
     public function find($id)
     {
-
+        return $this->repository->find($id);
     }
 
     public function updateWithId($id, $total)
@@ -62,35 +86,46 @@ class OrderService extends ContainerService {
      * @param $items
      * @return null
      */
-    public function newOrder($customerId, $items)
+    public function newOrder(EntityManagerInterface $manager, $customerId, $items)
     {
-        $total = 0;
-        $order = $this->create($customerId, 0);
+        /**
+         * @var CustomerRepository $customerRepository
+         */
+        $customerRepository = $this->container->get(CustomerRepository::class);
+        $customer = $customerRepository->find($customerId);
 
-        foreach ($items as $item) {
-            /**
-             * @var ProductService $productService
-             */
-            $productService = $this->container->get(ProductService::class);
-            $product = $productService->find($item["product_id"]);
-            if (!$product || $product->stock < $item["quantity"]){
-                //throw new QuantityException($product);
-            }
-            if ($product){
-                $total += $product->price * $item["quantity"];
-                $product->stock -= $item["quantity"];
-                $product->save();
+        if ($customer){
+            $total = 0;
+            $order = $this->create($customer, 0);
+
+            foreach ($items as $item) {
                 /**
-                 * @var OrderItemService $orderItemService
+                 * @var ProductService $productService
                  */
-                $orderItemService = $this->container->get(OrderItemService::class);
-                $orderItemService->firstOrCreate($order->id, $product->id, $item["quantity"], $product->price, $product->price * $item["quantity"]);
+                $productService = $this->container->get(ProductService::class);
+                $product = $productService->find($item["product_id"]);
+                if (!$product || $product->getStock() < $item["quantity"]){
+                    //throw new QuantityException($product); //todo ----------------------------------------------------
+                }
+                if ($product){
+                    $total += $product->getPrice() * $item["quantity"];
+                    $product->setStock($product->getStock() - $item["quantity"]);
+                    $manager->persist($product);
+                    $manager->flush();
+                    /**
+                     * @var OrderItemService $orderItemService
+                     */
+                    $orderItemService = $this->container->get(OrderItemService::class);
+                    $orderItemService->create($order, $product, $item["quantity"], $product->getPrice(), $product->getPrice() * $item["quantity"]);
+                }
             }
+
+            $order->setTotal($total);
+            $manager->persist($order);
+            $manager->flush();
+
+            return $this->findWithItems($order->getId());
         }
-
-        $order->total = $total;
-        $order->save();
-
-        return $this->findWithItems($order->id);
+        return "Customer Not Found";
     }
 }

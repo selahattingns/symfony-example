@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=OrderRepository::class)
  * @ORM\Table(name="`orders`")
+ * @ORM\HasLifecycleCallbacks
  */
 class Order
 {
@@ -89,5 +90,24 @@ class Order
     public function onPreUpdate()
     {
         $this->updated = new \DateTime("now");
+    }
+
+    /**
+     * @return Customer|null
+     */
+    public function getCustomer(): ?Customer
+    {
+        return $this->customer;
+    }
+
+    /**
+     * @param Customer|null $customer
+     * @return $this
+     */
+    public function setCustomer(?Customer $customer): self
+    {
+        $this->customer = $customer;
+
+        return $this;
     }
 }

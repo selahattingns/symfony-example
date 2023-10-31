@@ -8,6 +8,7 @@ use App\Helpers\ValidatorHelper;
 use App\Requests\OrderCalculateDiscountRequest;
 use App\Requests\OrderStoreRequest;
 use App\Services\OrderService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,12 +37,12 @@ class OrderController extends AbstractController
      *
      * @Route("/api/orders", name="orderStore", methods={"POST"})
      */
-    public function store(Request $request, ValidatorInterface $validator): Response
+    public function store(Request $request, ValidatorInterface $validator, EntityManagerInterface $manager): Response
     {
         $errors = ValidatorHelper::getErrors($validator, $request, OrderStoreRequest::getCollections());
         if ($errors->count()) return RedirectHelper::validatorMessagesForResponse($errors);
 
-        return $this->json($this->orderService->newOrder(JsonHelper::getValueForRequest($request, "customer_id"), JsonHelper::getValueForRequest($request, "items")));
+        return $this->json($this->orderService->newOrder($manager, JsonHelper::getValueForRequest($request, "customer_id"), JsonHelper::getValueForRequest($request, "items")));
     }
 
     /**
