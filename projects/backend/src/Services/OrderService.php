@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\Entity\Customer;
 use App\Entity\Order;
+use App\Exceptions\QuantityException;
 use App\Repository\CustomerRepository;
 use App\Repository\OrderRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -46,15 +47,16 @@ class OrderService extends ContainerService {
     /**
      * @param $customer
      * @param $total
+     * @param bool $flush
      * @return Order
      */
-    public function create($customer, $total)
+    public function create($customer, $total, bool $flush = true)
     {
         $order = new Order();
         $order->setTotal($total);
         $order->setCustomer($customer);
 
-        $this->repository->add($order, true);
+        $this->repository->add($order, $flush);
 
         return $order;
     }
@@ -96,7 +98,7 @@ class OrderService extends ContainerService {
 
         if ($customer){
             $total = 0;
-            $order = $this->create($customer, 0);
+            $order = $this->create($customer, 0, false);
 
             foreach ($items as $item) {
                 /**
@@ -105,18 +107,18 @@ class OrderService extends ContainerService {
                 $productService = $this->container->get(ProductService::class);
                 $product = $productService->find($item["product_id"]);
                 if (!$product || $product->getStock() < $item["quantity"]){
-                    //throw new QuantityException($product); //todo ----------------------------------------------------
+                    throw new QuantityException($product);
                 }
                 if ($product){
                     $total += $product->getPrice() * $item["quantity"];
                     $product->setStock($product->getStock() - $item["quantity"]);
                     $manager->persist($product);
-                    $manager->flush();
+
                     /**
                      * @var OrderItemService $orderItemService
                      */
                     $orderItemService = $this->container->get(OrderItemService::class);
-                    $orderItemService->create($order, $product, $item["quantity"], $product->getPrice(), $product->getPrice() * $item["quantity"]);
+                    $orderItemService->create($order, $product, $item["quantity"], $product->getPrice(), $product->getPrice() * $item["quantity"], false);
                 }
             }
 

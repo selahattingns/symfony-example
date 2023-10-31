@@ -19,9 +19,10 @@ class OrderItemService extends ContainerService {
      * @param $quantity
      * @param $unitPrice
      * @param $total
+     * @param bool $flush
      * @return void
      */
-    public function create($order, $product, $quantity, $unitPrice, $total){
+    public function create($order, $product, $quantity, $unitPrice, $total, bool $flush = true){
         $orderItem = new OrderItem();
         $orderItem->setTotal($total);
         $orderItem->setQuantity($quantity);
@@ -33,6 +34,6 @@ class OrderItemService extends ContainerService {
          * @var OrderItemRepository $orderItemRepository
          */
         $orderItemRepository = $this->container->get(OrderItemRepository::class);
-        $orderItemRepository->add($orderItem, true);
+        $orderItemRepository->add($orderItem, $flush);
     }
 }
