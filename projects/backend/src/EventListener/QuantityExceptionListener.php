@@ -7,6 +7,10 @@ use App\Exceptions\QuantityException;
 
 class QuantityExceptionListener
 {
+    /**
+     * @param ExceptionEvent $event
+     * @return void
+     */
     public function onKernelException(ExceptionEvent $event)
     {
         $exception = $event->getThrowable();

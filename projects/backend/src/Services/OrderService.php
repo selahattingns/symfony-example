@@ -33,6 +33,9 @@ class OrderService extends ContainerService {
         $this->repository = $this->container->get(OrderRepository::class);
     }
 
+    /**
+     * @return string[]
+     */
     public static function getSubscribedServices(): array
     {
         return [
@@ -41,11 +44,6 @@ class OrderService extends ContainerService {
             ProductService::class => ProductService::class,
             OrderItemService::class => OrderItemService::class
         ];
-    }
-
-    public function firstOrCreate($customerId, $total)
-    {
-
     }
 
     /**
@@ -74,14 +72,13 @@ class OrderService extends ContainerService {
         return $this->repository->find($id);
     }
 
+    /**
+     * @param $id
+     * @return Order|null
+     */
     public function find($id)
     {
         return $this->repository->find($id);
-    }
-
-    public function updateWithId($id, $total)
-    {
-
     }
 
     /**

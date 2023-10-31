@@ -22,6 +22,9 @@ class OrderItemService extends ContainerService {
         $this->repository = $this->container->get(OrderItemRepository::class);
     }
 
+    /**
+     * @return string[]
+     */
     public static function getSubscribedServices(): array
     {
         return [
@@ -45,7 +48,6 @@ class OrderItemService extends ContainerService {
         $orderItem->setUnitPrice($unitPrice);
         $orderItem->setOrder($order);
         $orderItem->setProduct($product);
-
 
         $order->addOrderItem($orderItem);
     }

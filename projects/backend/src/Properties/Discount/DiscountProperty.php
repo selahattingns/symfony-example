@@ -7,6 +7,9 @@ use App\Properties\Discount\Rules\CccRule;
 use Doctrine\ORM\EntityManagerInterface;
 
 class DiscountProperty {
+    /**
+     * @var string[]
+     */
     private $namespacesForRuleType = [
         AaaRule::class,
         BbbRule::class,

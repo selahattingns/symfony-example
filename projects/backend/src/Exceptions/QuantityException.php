@@ -1,12 +1,13 @@
 <?php
 namespace App\Exceptions;
 
+use App\Entity\Product;
 use Exception;
 
 class QuantityException extends Exception
 {
     /**
-     * @var
+     * @var Product
      */
     private $product;
 
@@ -22,7 +23,7 @@ class QuantityException extends Exception
     }
 
     /**
-     * @return mixed
+     * @return Product
      */
     public function getProduct()
     {

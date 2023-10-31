@@ -20,6 +20,9 @@ class ProductService extends ContainerService {
         $this->repository = $this->container->get(ProductRepository::class);
     }
 
+    /**
+     * @return string[]
+     */
     public static function getSubscribedServices(): array
     {
         return [
