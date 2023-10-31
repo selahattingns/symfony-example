@@ -2,14 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\Order;
 use App\Helpers\JsonHelper;
 use App\Helpers\RedirectHelper;
 use App\Helpers\ValidatorHelper;
+use App\Repository\OrderRepository;
 use App\Requests\OrderCalculateDiscountRequest;
 use App\Requests\OrderStoreRequest;
 use App\Services\OrderService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -42,7 +45,9 @@ class OrderController extends AbstractController
         $errors = ValidatorHelper::getErrors($validator, $request, OrderStoreRequest::getCollections());
         if ($errors->count()) return RedirectHelper::validatorMessagesForResponse($errors);
 
-        return $this->json($this->orderService->newOrder($manager, JsonHelper::getValueForRequest($request, "customer_id"), JsonHelper::getValueForRequest($request, "items")));
+        $order = $this->orderService->newOrder($manager, JsonHelper::getValueForRequest($request, "customer_id"), JsonHelper::getValueForRequest($request, "items"));
+
+        return new JsonResponse($order ? $order->getResponse() : [], 200);
     }
 
     /**

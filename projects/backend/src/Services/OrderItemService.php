@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use App\Entity\Order;
 use App\Entity\OrderItem;
 use App\Repository\OrderItemRepository;
 use Psr\Container\ContainerInterface;
@@ -29,7 +30,7 @@ class OrderItemService extends ContainerService {
     }
 
     /**
-     * @param $order
+     * @param Order $order
      * @param $product
      * @param $quantity
      * @param $unitPrice
@@ -37,14 +38,15 @@ class OrderItemService extends ContainerService {
      * @param bool $flush
      * @return void
      */
-    public function create($order, $product, $quantity, $unitPrice, $total, bool $flush = true){
+    public function create(Order $order, $product, $quantity, $unitPrice, $total, bool $flush = true){
         $orderItem = new OrderItem();
         $orderItem->setTotal($total);
         $orderItem->setQuantity($quantity);
         $orderItem->setUnitPrice($unitPrice);
         $orderItem->setOrder($order);
         $orderItem->setProduct($product);
-;
-        $this->repository->add($orderItem, $flush);
+
+
+        $order->addOrderItem($orderItem);
     }
 }

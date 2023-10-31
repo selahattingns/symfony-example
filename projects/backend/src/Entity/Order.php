@@ -3,11 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\OrderRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=OrderRepository::class)
- * @ORM\Table(name="`orders`")
+ * @ORM\Table(name="orders")
  * @ORM\HasLifecycleCallbacks
  */
 class Order
@@ -31,11 +33,6 @@ class Order
     private $customer;
 
     /**
-     * @ORM\OneToMany(targetEntity=OrderItem::class, mappedBy="order", orphanRemoval=true, cascade={"persist"})
-     */
-    private $items;
-
-    /**
      * @ORM\Column(type="datetime")
      */
     protected $created;
@@ -44,6 +41,16 @@ class Order
      * @ORM\Column(type="datetime", nullable = true)
      */
     protected $updated;
+
+    /**
+     * @ORM\OneToMany(targetEntity=OrderItem::class, mappedBy="order", cascade={"persist"}, orphanRemoval=true)
+     */
+    private $orderItems;
+
+    public function __construct()
+    {
+        $this->orderItems = new ArrayCollection();
+    }
 
     /**
      * @return int|null
@@ -109,5 +116,68 @@ class Order
         $this->customer = $customer;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, OrderItem>
+     */
+    public function getOrderItems(): Collection
+    {
+        return $this->orderItems;
+    }
+
+    /**
+     * @param OrderItem $orderItem
+     * @return $this
+     */
+    public function addOrderItem(OrderItem $orderItem): self
+    {
+        if (!$this->orderItems->contains($orderItem)) {
+            $this->orderItems->add($orderItem);
+            $orderItem->setOrder($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param OrderItem $orderItem
+     * @return $this
+     */
+    public function removeOrderItem(OrderItem $orderItem): self
+    {
+        if ($this->orderItems->removeElement($orderItem)) {
+            // set the owning side to null (unless already changed)
+            if ($orderItem->getOrder() === $this) {
+                $orderItem->setOrder(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getResponse() : array
+    {
+        foreach ($this->getOrderItems() as $orderItem){
+            $items[] = [
+                "id" => $orderItem->getId(),
+                "quantity" => $orderItem->getQuantity(),
+                "total" => $orderItem->getTotal(),
+                "unit_price" => $orderItem->getUnitPrice(),
+            ];
+        }
+        return [
+            "id" => $this->getId(),
+            "total" => $this->getTotal(),
+            "customer" => [
+                "name" => $this->getCustomer()->getName() ?? "",
+                "since" => $this->getCustomer()->getSince() ?? "",
+                "revenue" => $this->getCustomer()->getRevenue() ?? "",
+            ],
+            "items" => $items ?? [],
+        ];
     }
 }

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=OrderItemRepository::class)
- * @ORM\Table(name="`order_items`")
+ * @ORM\Table(name="order_items")
  */
 class OrderItem
 {
@@ -34,16 +34,16 @@ class OrderItem
     private $total;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Order", inversedBy="items")
-     * @ORM\JoinColumn(name="order_id", referencedColumnName="id")
-     */
-    private $order;
-
-    /**
      * @ORM\ManyToOne(targetEntity="Product", inversedBy="items")
      * @ORM\JoinColumn(name="product_id", referencedColumnName="id")
      */
     private $product;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="orderItems")
+     * @ORM\JoinColumn(name="order_id", referencedColumnName="id", nullable=false)
+     */
+    private $order;
 
     /**
      * @return int|null
@@ -111,11 +111,11 @@ class OrderItem
     }
 
     /**
-     * @param mixed $order
+     * @return Product|null
      */
-    public function setOrder($order): void
+    public function getProduct(): ?Product
     {
-        $this->order = $order;
+        return $this->product;
     }
 
     /**
@@ -124,5 +124,24 @@ class OrderItem
     public function setProduct($product): void
     {
         $this->product = $product;
+    }
+
+    /**
+     * @return Order|null
+     */
+    public function getOrder(): ?Order
+    {
+        return $this->order;
+    }
+
+    /**
+     * @param Order|null $order
+     * @return $this
+     */
+    public function setOrder(?Order $order): self
+    {
+        $this->order = $order;
+
+        return $this;
     }
 }

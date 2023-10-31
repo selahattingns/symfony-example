@@ -103,6 +103,11 @@ class OrderService extends ContainerService {
             $total = 0;
             $order = $this->create($customer, 0, false);
 
+            /**
+             * @var OrderItemService $orderItemService
+             */
+            $orderItemService = $this->container->get(OrderItemService::class);
+
             foreach ($items as $item) {
                 /**
                  * @var ProductService $productService
@@ -114,13 +119,9 @@ class OrderService extends ContainerService {
                 }
                 if ($product){
                     $total += $product->getPrice() * $item["quantity"];
-                    $product->setStock($product->getStock() - $item["quantity"]);
-                    $manager->persist($product);
+                    //$product->setStock($product->getStock() - $item["quantity"]);
+                    //$manager->persist($product);
 
-                    /**
-                     * @var OrderItemService $orderItemService
-                     */
-                    $orderItemService = $this->container->get(OrderItemService::class);
                     $orderItemService->create($order, $product, $item["quantity"], $product->getPrice(), $product->getPrice() * $item["quantity"], false);
                 }
             }

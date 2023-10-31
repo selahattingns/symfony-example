@@ -34,11 +34,12 @@ class CccRule extends RuleTypeSetting implements RuleInterface {
     public function checkForRule(EntityManagerInterface $manager, $order, $rule): void
     {
         if (isset($rule->getJsonRuleValues()[0], $rule->getJsonRuleValues()[1])){
-            foreach (/*$order->items*/[] as $item){
+            foreach ($order->getOrderItems() as $orderItem){
+                $product = $orderItem->getProduct();
                 /* x id li kategori */
-                if (optional($item->product)->category === $rule->getJsonRuleValues()[0]){
+                if ($product->getCategory() === $rule->getJsonRuleValues()[0]){
                     /* y veya daha fazla adet satın almak */
-                    if($item->quantity >= $rule->getJsonRuleValues()[1]){
+                    if($orderItem->getQuantity() >= $rule->getJsonRuleValues()[1]){
                         $this->ruleDefinition($manager, $order, $rule);
                     }
                 }
