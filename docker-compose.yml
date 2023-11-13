@@ -8,7 +8,7 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      - ./projects/:/var/www/html
+      - ./:/var/www/html
       - ./docker/php73/www.conf:/usr/local/etc/php-fpm.d/www.conf
       - ./docker/php73/php.ini:/usr/local/etc/php/php.ini
     environment:
@@ -20,7 +20,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./projects/:/var/www/html/
+      - ./:/var/www/html/
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - php73

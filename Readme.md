@@ -50,12 +50,11 @@ of this service, you should run the command "docker exec -it 39979863cb2b bash"
 ---
 
 After connecting, you can run
-the command "cd backend && php bin/console doctrine:database:create" to execute
+the command "php bin/console doctrine:database:create" to execute
 the migrations for the database.
 
-
+    composer install
     php bin/console doctrine:database:create
-    php bin/console make:migration
     php bin/console doctrine:migrations:migrate
     php bin/console doctrine:fixtures:load
 
